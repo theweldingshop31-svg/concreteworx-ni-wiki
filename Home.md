@@ -23,6 +23,7 @@ Handcrafted concrete garden ornaments, Northern Ireland. This vault is the worki
 - [[Technical Learnings]] — import/tooling lessons learned
 - [[Outstanding Work]] — prioritised punch list
 - [[Site Structure]] — nav, homepage layout, brand touchpoints
+- [design-system/concreteworx-ni/MASTER.md](design-system/concreteworx-ni/MASTER.md) — persisted UI design system (colors, typography, component specs) built with `ui-ux-pro-max`, overridden to match locked brand CI
 
 ## Status at a Glance
 - 🔴 **Biggest gap:** the fully SEO-optimised catalogue (titles/keywords/descriptions/meta) was built in a separate session and never re-uploaded — see [[Outstanding Work]].
