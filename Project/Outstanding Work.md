@@ -7,6 +7,7 @@ tags: [project, todo]
 ← [[Home]] · [[Project Status Overview]]
 
 ## Immediate (blocks going live)
+- [ ] **Diagnose and fix product/category page indexation** — verified via live Search Console data that Google has not indexed any product or category page (0/58 submitted sitemap URLs indexed); only the homepage and `/shop/` are indexed. This blocks the entire product-page-driven SEO strategy from working at all. Next diagnostic step (not yet done): check whether the homepage/shop HTML actually contains crawlable `<a href>` links to product/category URLs. See [[SEO Audit Findings]].
 - [ ] Recover or regenerate the completed SEO product catalogue (titles, keywords, descriptions, meta, permalinks) and save it into this project so it's the working source of truth. See [[Catalogue Data Status]].
 - [ ] Backfill missing SKUs (73 products) — needed for WooCommerce import and inventory tracking.
 - [ ] Backfill missing prices (54 products).
@@ -25,3 +26,4 @@ tags: [project, todo]
 ## See also
 - [[SEO Strategy]]
 - [[Technical Learnings]]
+- [[SEO Audit Findings]]
