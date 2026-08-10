@@ -31,7 +31,7 @@ Handcrafted concrete garden ornaments, Northern Ireland. This vault is the worki
 - [[CWNI-GSC-MCP]] — local Search Console access, scoped correctly to concreteworxni.com
 
 ## Status at a Glance
-- 🔴 **Biggest gap:** product and category pages are not indexed by Google at all (0/58 sitemap URLs indexed, verified via Search Console) — see [[SEO Audit Findings]]. This blocks the entire product-page SEO strategy regardless of catalogue completeness.
+- 🔴 **Biggest gap:** product and category pages are not indexed by Google at all (0/58 sitemap URLs indexed, verified via Search Console) — see [[SEO Audit Findings]]. This blocks the entire product-page SEO strategy regardless of catalogue completeness. **Internal linking has been ruled out as the cause** (verified via raw HTML inspection 2026-08-10) — leading hypothesis is now crawl backlog/low domain authority. 3 sample product URLs manually submitted for indexing via Search Console; result not yet verified. Indexing API access is separately broken (permission error) and still needs fixing — see [[Outstanding Work]].
 - 🔴 The fully SEO-optimised catalogue (titles/keywords/descriptions/meta) was built in a separate session and never re-uploaded — see [[Outstanding Work]].
 - 🟡 SKUs missing on 73/121 products; prices missing on 54/121.
 - 🟢 Category structure is finalised and locked (10 categories, all SEO fields complete).

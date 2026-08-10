@@ -74,8 +74,29 @@ Chronological record of work done on this vault/project. Each entry: what change
 
 ---
 
+## 2026-08-10 — Session 5: Internal-link diagnostic + indexing requests
+
+**Work:** Ran the diagnostic step flagged as unresolved at the end of Session 4 — fetched raw (non-JS-rendered) HTML as Googlebot (`curl -A Googlebot`) for the homepage, all 4 paginated `/shop/` pages, and one sample product page, then checked link structure, `robots` meta, canonical tags, and `robots.txt`.
+
+**Finding (verified, direct HTML inspection):** internal linking is **not** the cause of the indexation gap. Homepage and `/shop/` contain real, crawlable `<a href>` links (no JS-injection dependency, no `nofollow`) to all category pages and — across the 4 shop pagination pages — effectively all ~50 live products. Sample product page has correct `index, follow` robots meta, self-referencing canonical, no `noindex`. `robots.txt` has no disallow on `/product/` or `/product-category/`. This **disproves hypothesis #1** from Session 4 (no crawlable internal link path). [[SEO Audit Findings]] updated in place with this result and a revised, re-ranked hypothesis list (crawl backlog / low domain authority now the leading explanation).
+
+**Secondary finding (minor, not a blocker):** homepage has duplicate `http://` and `https://` versions of the same category links (e.g. `garden-benches` appears under both protocols) — mild link-equity dilution, not yet added to [[Outstanding Work]] as a formal item.
+
+**Action attempted:** submitted 3 unindexed product URLs (Roman Bench, Wood Stump Planter, Elephant Bench) to Google's Indexing API via `cwni_gsc_submit_batch`, twice (initial attempt + retry after user attempted a permissions fix). **Both attempts failed** — `Permission denied. Failed to verify the URL ownership.` on all 3 URLs each time. Per [[CWNI-GSC-MCP]], this connector uses OAuth (not a service account), so the fix requires either enabling the Indexing API on the correct GCP project or the OAuth-authenticated Google account holding **Owner** (not just full/restricted user) role on the `https://concreteworxni.com/` Search Console property. **This was not confirmed fixed** — the retry failed with an identical error, so either the permission change wasn't completed, hasn't propagated, or was applied to the wrong account/project. Status: unresolved.
+
+**Fallback:** user manually submitted the same 3 URLs via Search Console's UI ("Request Indexing") outside of any tool — confirmed done by the user in chat, but **not independently verified** by me (no tool call was made to check `inspect_url` status post-submission).
+
+**Verification state:** internal-linking finding is directly verified (raw HTML inspected). Indexing API failure is directly verified (error returned twice). Manual Search Console submission is **user-reported, not tool-verified** — should be checked with `inspect_url` in a few days once Google has had time to (re)crawl.
+
+**Repo:** `Project/SEO Audit Findings.md` modified, not yet committed as of session close (see Status below).
+
+---
+
 ## Open questions carried forward
 
-1. **Why aren't product/category pages indexed?** Diagnostic step not yet run (see Session 4). Top priority for next session.
-2. Domain vs. URL-prefix property permission mismatch in Search Console — not investigated further; workaround (use URL-prefix) is in place and working, but the underlying permission gap on the domain property hasn't been explained or fixed.
-3. `mobileUsability: VERDICT_UNSPECIFIED` on all `inspect_url` results — not a confirmed issue, just an unpopulated field; worth checking if this stays unspecified as more URLs are inspected, or if it's a quirk of the tool/API response for this account.
+1. ~~Why aren't product/category pages indexed?~~ Internal linking ruled out (Session 5). Remaining live hypothesis: crawl backlog / low domain authority on a site whose sitemap has sat unindexed for 7+ months. **Not yet resolved** — awaiting recrawl results on the 3 manually-submitted URLs.
+2. **Indexing API permission fix still broken.** Two attempts, two identical "Permission denied" errors. Needs verification that (a) Indexing API is enabled in the right GCP project, (b) the OAuth account has Owner role on the correct property, (c) the token cache (`~/.gsc-mcp/oauth-token.json`) was refreshed after any permission change. Not diagnosed further this session — user chose to work around it manually rather than continue troubleshooting.
+3. **Manual indexing requests not yet verified.** Roman Bench, Wood Stump Planter, and Elephant Bench product pages were submitted via Search Console UI by the user, but no `inspect_url` check has confirmed Google acted on the requests. Check in a few days.
+4. Domain vs. URL-prefix property permission mismatch in Search Console — not investigated further; workaround (use URL-prefix) is in place and working, but the underlying permission gap on the domain property hasn't been explained or fixed.
+5. `mobileUsability: VERDICT_UNSPECIFIED` on all `inspect_url` results — not a confirmed issue, just an unpopulated field; worth checking if this stays unspecified as more URLs are inspected, or if it's a quirk of the tool/API response for this account.
+6. Minor: duplicate `http`/`https` category links on homepage (found Session 5) — not yet triaged into [[Outstanding Work]].

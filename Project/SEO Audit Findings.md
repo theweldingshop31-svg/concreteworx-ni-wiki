@@ -28,12 +28,20 @@ Cross-confirmed by `gsc_list_sitemaps`: the submitted sitemap (`https://concrete
 
 **Impact:** the 208 clicks / 2,533 impressions measured in the last 28 days ([[Project Status Overview]] traffic figures) are almost certainly landing entirely on the homepage/shop/services pages. **None of the 50 live products are earning any organic visibility.** This is a larger lever than any on-page copy fix below — fixing it is a prerequisite for the SEO strategy in [[SEO Strategy]] to work at all, since that strategy is entirely product-page-driven (three-tier keyword targeting per product).
 
-**Likely causes, not yet verified — ranked by probability:**
-1. No crawlable internal link path from indexed pages (homepage/shop) to product/category pages — sitemaps are a weak signal; Google prioritises internally-linked pages, especially on a low-authority site.
-2. Site/sitemap still working through Google's crawl backlog — weakened by the fact the sitemap was submitted 2026-01-08, over 7 months ago.
-3. JavaScript-rendered product links not visible to Googlebot's crawl of the homepage/shop.
+**Root cause — verified 2026-08-10 (later same session):** fetched raw HTML of homepage, all 4 paginated `/shop/` pages, and a sample product page as Googlebot (`curl -A Googlebot`, no JS execution).
 
-**Unresolved — next diagnostic step:** fetch the raw (non-JS-rendered) HTML of the homepage and `/shop/` and check whether product/category URLs actually appear as `<a href>` links. This determines whether it's a crawl-discovery problem (fixable via internal linking) or something else. **Not yet done as of session close.**
+- ✅ Homepage: real `<a href>` links (not JS-injected) to 6 category pages + 5 products, no `nofollow`.
+- ✅ `/shop/`: 16 products/page × 4 pages (`rel="next"` chain intact) — covers all ~50 live products, plus 8 category links.
+- ✅ Sample product page: `robots: index, follow`, correct self-referencing canonical, no `noindex`.
+- ✅ `robots.txt`: no disallow on `/product/` or `/product-category/`.
+
+**Internal linking is not the problem — hypothesis #1 (no crawlable link path) is disproven.** Product/category URLs are fully reachable and followable from indexed pages in plain HTML.
+
+Remaining live hypotheses, ranked:
+1. **Crawl backlog / low domain authority** — sitemap submitted 2026-01-08 (7+ months ago), still 0/58 indexed despite good internal linking. Plausible for a low-authority new domain; Google can sit on "Discovered — currently not indexed" a long time regardless of link structure.
+2. Minor hygiene issue spotted in passing: homepage has both `http://` and `https://` versions of the same category links (e.g. `garden-benches` appears twice, once on each protocol) — splits link equity slightly, worth fixing but not a blocker.
+
+**Next diagnostic step:** use `gsc_inspect_url`/Search Console "Request Indexing" on 2-3 product URLs and watch whether they get crawled within days — if they do, it's pure backlog; if Google keeps skipping them, look harder at authority/quality signals.
 
 ## Other findings (site inspection only, see prior audit for full detail)
 
