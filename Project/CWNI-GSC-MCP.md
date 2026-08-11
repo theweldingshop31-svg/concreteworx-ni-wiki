@@ -6,6 +6,8 @@ tags: [project, tooling, mcp, seo]
 
 ← [[Home]] · [[SEO Audit Findings]]
 
+> ⚠️ **Tool prefix: `mcp__cwni-gsc__*`.** Do not use `mcp__gsc__*` for this project — that connector is hardcoded to a different client's Search Console property (secretsense.co.za) and will return that property's data without error on most calls (only `inspect_url` rejects concreteworxni.com URLs outright). See `CLAUDE.md` at the repo root and `log.md` Session 6 (2026-08-11) for how this was discovered.
+
 A local Google Search Console MCP server scoped to concreteworxni.com, built 2026-08-10. Lives in `cwni-gsc-mcp/` in this repo but is **not** committed/pushed (gitignored `.env`-equivalent secrets + kept local-only, same policy as [[WordPress MCP]] — see that page's rationale).
 
 ## Why it exists

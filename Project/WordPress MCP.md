@@ -6,6 +6,8 @@ tags: [project, tooling, mcp, wordpress]
 
 ← [[Home]] · [[Outstanding Work]]
 
+> ⚠️ **Tool prefix: `mcp__concreteworxni-wp__*`.** Do not use `mcp__wordpress-mcp__*` for this project — that connector is hardcoded to a different client's site (horseaddict.co.za) and will return that site's data without error. See `CLAUDE.md` at the repo root and `log.md` Session 6 (2026-08-11) for how this was discovered.
+
 A local MCP server giving Claude full read/write access to concreteworxni.com — content, media, taxonomies, users, comments, plugins, themes, settings, and (via a companion mu-plugin) active-theme file editing. Built 2026-08-10, lives in `mcp-server/` in this repo.
 
 ## Why it's not committed to the public repo
