@@ -120,6 +120,33 @@ Chronological record of work done on this vault/project. Each entry: what change
 
 ---
 
+## 2026-08-11 — Session 7: Pricing reconciliation (sheet → site)
+
+**Work:** User designated the pricing sheet (`1VeMS3LVNqNtZqYKrrd9YH6g_8XGHppU3PUUIPdUYQ9c` — the same sheet from Session 6, now populated with regular prices per SKU) as source of authority for product pricing, and asked for live site prices to be reconciled against it — sheet wins, site gets updated, sheet is never touched.
+
+**Method:** Read the sheet directly via `read_file_content` (no MCP write calls made to it, per instruction). Pulled the full live catalogue — 112 products — from `concreteworxni-wp` via `wp_raw_request` against `/wp-json/wc/v3/products`, paginated (13 pages of up to 10), since the earlier per_page/status query params caused opaque `fetch failed` errors on this connector (unresolved why — worked fine once paged with just `page=N`). Output regularly exceeded the tool's inline token limit, so results were read from the persisted-output cache files and parsed with a small local `awk` script into a clean TSV (id/name/status/sku/regular_price/sale_price) for matching — some pages came back as escaped-JSON inline previews rather than plain files, which broke the first parsing pass silently until re-diagnosed. Matched sheet rows to site products by SKU only (rows with a blank SKU column, e.g. "Roman Style Square," were left out of scope — no reliable match).
+
+**Finding:** Of the live (`status: publish`) products where the sheet also carries a price, 5 had mismatches:
+- BEN-001 Roman Bench: site £80 vs sheet £100
+- BEN-002 Elephant Bench: site £80 vs sheet £100
+- LGE-004 Donkey and Cart large: site £100 vs sheet £120
+- LGE-014 Bali lion / Fu Dog: site £30 vs sheet £35
+- PLT-011 Swan: parent product had no direct price (it's a **variable product** with Small/Large variants) — checked variation-level pricing directly and found the "Large" variant already correctly priced at £60 matching the sheet's "Swan large" row. No live discrepancy; an initial write attempt to the parent's `regular_price` was a no-op, as expected for variable products.
+
+Everything else live matched the sheet exactly (PLT-001/007/008/009/010, STA-001/005/006/007/012/013/014/016, ANI-001/003, BB-004). Sheet-vs-site mismatches on **draft** (not live) products were deliberately left alone per the user's "live and has pricing" instruction, even though several exist (e.g. BEN-003 Horsehead Bench: site £80 draft vs sheet £100 — not touched, since not published).
+
+**Action (user-confirmed via AskUserQuestion before writing):** Updated `regular_price` on 4 live products via individual `PUT /wp-json/wc/v3/products/{id}` calls — id 947 (BEN-001 → 100), 948 (BEN-002 → 100), 958 (LGE-004 → 120), 968 (LGE-014 → 35). Each write's full response was read back inline and confirms the new price persisted (`price`/`regular_price` fields and `price_html` all reflect the new values).
+
+**Verification state:** All 4 price writes directly confirmed via the PUT response body (not just an accepted-count) — a stronger verification standard than Session 6's SKU batch write, which only spot-checked 1 of 122. Swan/PLT-011 variation pricing directly confirmed via `GET /wp-json/wc/v3/products/997/variations`. Sheet was read-only throughout — no write calls made against the Drive file.
+
+**Not done / left open:**
+- Draft-product price mismatches (BEN-003 through 008 minus 001/002, several LGE-*, ANI-*, BB-*, STA-* rows) were not resolved — they're correctly out of scope per the task's "live" qualifier, but will resurface as mismatches again whenever any of those drafts get published, unless addressed before then.
+- Sheet rows with no SKU (at least "Roman Style Square," £20) were skipped entirely — not matched, not flagged individually beyond this log entry.
+- The recurring `fetch failed` error on `wc/v3/products` when passing `per_page`/`status` query params (Session 7) was worked around (plain `page=N` calls work) but not root-caused — worth a look if it recurs and blocks a larger batch operation.
+- Open items 7, 8, 9, 10 from Session 6 (Donkey duplicate SKU, third spreadsheet completeness, sheet rename, 121/122 SKU writes unverified) are all still open — this session did not touch any of them.
+
+---
+
 ## Open questions carried forward
 
 1. ~~Why aren't product/category pages indexed?~~ Internal linking ruled out (Session 5). Remaining live hypothesis: crawl backlog / low domain authority on a site whose sitemap has sat unindexed for 7+ months. **Not yet resolved** — awaiting recrawl results on the 3 manually-submitted URLs.
@@ -132,3 +159,5 @@ Chronological record of work done on this vault/project. Each entry: what change
 8. **Third spreadsheet's completeness unverified (Session 6).** `Concreteworx_NI_Product_Spreadsheet_latest` (id `1_2bZU0BMLLZvm3ZlNd-mNDYZIJmeWnLgNsPF0MRVjsE`) looks like the long-lost fully-SEO'd catalogue, but only 2 of 121 rows were content-checked. Needs full read-through, and its old-format SKUs need reconciling against the new short-code scheme before it can be treated as source of truth.
 9. **Sheet rename not done.** New sheet (id `1VeMS3LVNqNtZqYKrrd9YH6g_8XGHppU3PUUIPdUYQ9c`) still titled "Concreteworx NI Product Spreadsheet — New SKUs (2026-08-11)" — user needs to rename manually (no Drive rename tool available in this session).
 10. **121 of 122 live SKU writes not individually spot-checked** — batch counts confirmed all 122 accepted, but only 1 product (`id 937`) was re-fetched to confirm the field actually persisted correctly.
+11. **Draft products with stale prices vs. the pricing sheet (Session 7).** Several non-live products carry prices that don't match the sheet (e.g. BEN-003 Horsehead Bench: site £80 draft vs sheet £100). Deliberately left unresolved since they're not published — but will need reconciling before any of them go live.
+12. **`wc/v3/products` `fetch failed` on `per_page`/`status` query params (Session 7).** Plain `page=N` pagination works fine on the same endpoint; adding `per_page` or `status` as query params consistently failed with an opaque `fetch failed` from the `concreteworxni-wp` connector. Not root-caused — workaround in place, but could block larger batch reads/writes later.
