@@ -18,7 +18,7 @@ Handcrafted concrete garden ornaments, Northern Ireland. This vault is the worki
 ### Project
 - [[Project Status Overview]] — snapshot, what's live, what's outstanding
 - [[Category Structure]] — the locked 10-category catalogue structure
-- [[Catalogue Data Status]] — field-by-field completeness of the 121-product spreadsheet
+- [[Catalogue Data Status]] — field-by-field completeness of the 121-product spreadsheet; pricing sheet is now source of authority for live pricing (Session 7)
 - [[SEO Strategy]] — keyword strategy, title formats, description approach
 - [[Technical Learnings]] — import/tooling lessons learned
 - [[Outstanding Work]] — prioritised punch list
@@ -38,6 +38,7 @@ Handcrafted concrete garden ornaments, Northern Ireland. This vault is the worki
 - 🟢 Category structure is finalised and locked (10 categories, all SEO fields complete) — see [[Category Structure]]. Session 6's independent live-data classification (keyword/taxonomy-based, for SKU-coding purposes only) produced slightly different per-category counts (e.g. 122 live products found vs. 121 documented here) — not yet reconciled; likely reflects a draft/newer product added since [[Category Structure]] was last counted, not a structural disagreement.
 - 🟢 Real organic traffic is growing (clicks +63.8% period-over-period per [[SEO Audit Findings]]) — but currently limited to homepage/shop, not products.
 - 🟢 `concreteworxni-wp` (local WordPress MCP) is now confirmed connected and working end-to-end after a real bug fix (`.env` path resolution) — see [[WordPress MCP]] and [[log]] Session 6.
+- 🟢 **Live pricing reconciled against the pricing sheet (Session 7, 2026-08-11).** Sheet (`1VeMS3LVNqNtZqYKrrd9YH6g_8XGHppU3PUUIPdUYQ9c`) is now source of authority for pricing — sheet wins, site updated, never the reverse. All live (published) products with a sheet price were checked against the 112-product live catalogue; 4 mismatches corrected on the site (BEN-001, BEN-002, LGE-004, LGE-014), each confirmed via direct re-fetch. Draft-product price mismatches were deliberately left alone (out of scope — not live) and remain open. See [[log]] Session 7.
 
 ---
 *Compiled from `Concrete_Worx_NI_Brand_CI.docx` and `Concrete_Worx_NI_Project_Status_Reference.docx` (source docs 10 Aug 2026). Log of session-by-session work: [[log]].*
