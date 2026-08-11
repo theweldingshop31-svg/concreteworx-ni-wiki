@@ -51,6 +51,7 @@ Remaining live hypotheses, ranked:
 - Homepage H2 typo: "Northen Irelands" → "Northern Ireland's."
 - Cart/checkout/my-account included in sitemap despite being noindexed (low priority).
 - Only 50/121 catalogued products are published (already tracked in [[Outstanding Work]] and [[Catalogue Data Status]] — same root gap, independently confirmed here via WP REST `X-WP-Total: 50`).
+  - **Update 2026-08-11 (Session 7):** a full `wc/v3/products` pull (done for pricing reconciliation, not indexation — see [[log]] Session 7) found **46 published / 66 draft, 112 total** — 4 fewer published than the 50 counted here on 2026-08-10. Cause not investigated (could be products unpublished since, a counting-method difference, or products deleted/added) — flagged as a discrepancy, not yet explained.
 
 ## Traffic snapshot (real GSC data, last 28 days vs. prior 28)
 
