@@ -20,6 +20,10 @@ This repo (`concreteworx-ni-wiki`) is public. The MCP server code itself contain
 ## Status
 Confirmed working end-to-end 2026-08-10: authenticated as WP user NevWally31; theme bridge live against active theme `blocksy-child` (a child theme — the safe target for customisations, survives parent theme updates).
 
+**Session 7 (2026-08-11):** confirmed working for WooCommerce product data too, via the `wp_raw_request` escape hatch against `/wp-json/wc/v3/products` (not a dedicated tool — `wp_list_content` only supports `posts`/`pages`/`media`, not the `product` post type). Used to read the full 112-product live catalogue (paginated) and to write price corrections (`PUT /wp-json/wc/v3/products/{id}`, `{"regular_price": "..."}`) — 4 writes made, each confirmed via the full response body. See [[log]] Session 7.
+
+**Known quirk, not root-caused:** calling `/wp-json/wc/v3/products` with `per_page` or `status` query params consistently returns an opaque `fetch failed` from this connector. Plain pagination (`{"page": "N"}`, default page size 10) works fine and was used as the workaround. Worth investigating if it blocks a larger batch read/write later.
+
 ## See also
 - Full setup instructions: `mcp-server/README.md`
 - [[CWNI-GSC-MCP]] — the equivalent tool for Search Console access
