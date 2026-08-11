@@ -24,6 +24,8 @@ A previously-connected shared `gsc` MCP connector turned out to be hardcoded to 
 ## Status
 Confirmed working end-to-end 2026-08-10 — `site_snapshot` and `inspect_url` both returned real, verified concreteworxni.com data (see [[SEO Audit Findings]]).
 
+**Known gap (Session 5, 2026-08-10, still unresolved):** `submit_batch` (Google Indexing API) fails with `Permission denied. Failed to verify the URL ownership.` — tried twice (initial attempt + retry after a user permissions fix), same error both times. Since this connector uses OAuth (not a service account), the fix requires either enabling the Indexing API on the correct GCP project, or the OAuth-authenticated account holding **Owner** (not just full/restricted user) role on the `https://concreteworxni.com/` Search Console property — neither has been confirmed done. Read/reporting tools (`site_snapshot`, `inspect_url`, etc.) are unaffected and work fine; only the write path (`submit_batch`/`submit_url`/`submit_sitemap`) is suspect. See [[log]] Session 5 and [[Outstanding Work]].
+
 ## See also
 - [[SEO Audit Findings]] — first real analysis run through this tool
 - Full setup instructions: `cwni-gsc-mcp/README.md`
